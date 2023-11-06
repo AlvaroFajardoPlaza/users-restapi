@@ -5,7 +5,7 @@ import userRoutes from "./routes/user.routes";
 const app = express();
 
 //Configuración
-app.set("port", 5000);
+app.set("port", 8000);
 
 //Permitiendo llamadas http desde otras urls
 const cors = require("cors");
@@ -21,6 +21,6 @@ app.use(express.json())
 app.use(morgan("dev"));
 
 //Importamos las rutas que empleará la api
-app.use(userRoutes);
+app.use('/users', userRoutes);
 
 export default app
