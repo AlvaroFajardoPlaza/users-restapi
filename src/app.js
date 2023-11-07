@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import dotenv from "dotenv";
 import userRoutes from "./routes/user.routes";
 
 const app = express();
@@ -15,12 +16,12 @@ const whiteList = [
 app.use(cors({origin: whiteList})); 
 
 
-app.use(express.json())
+app.use(express.json());
 
 //Middleware para poder visualizar por consola las llamadas y respuestas http
 app.use(morgan("dev"));
 
 //Importamos las rutas que empleará la api
-app.use('/users', userRoutes);
+app.use('/', userRoutes);
 
 export default app
