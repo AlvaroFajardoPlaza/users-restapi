@@ -6,6 +6,9 @@ const userRoutes = Router()
 userRoutes.get("/", userController.getAllUsers)
 
 //Segunda prueba de registro de usuarios
-userRoutes.post("/register2", userController.register2);
+userRoutes.post("/register", userController.register);
+
+// Ruta de login de usuario
+userRoutes.post("/login", userController.login);
 
 export default userRoutes;

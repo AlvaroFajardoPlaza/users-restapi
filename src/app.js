@@ -11,7 +11,7 @@ app.set("port", 8000);
 //Permitiendo llamadas http desde otras urls
 const cors = require("cors");
 const whiteList = [
-    "http://localhost:"
+    "http://localhost:4200"
 ];
 app.use(cors({origin: whiteList})); 
 
@@ -22,6 +22,6 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 //Importamos las rutas que empleará la api
-app.use('/', userRoutes);
+app.use('/api/users', userRoutes);
 
 export default app

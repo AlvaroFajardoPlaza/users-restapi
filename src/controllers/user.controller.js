@@ -68,7 +68,7 @@ const findByEmail = async(req, res) => {
 
 
 // Segunda prueba de registro de usuarios: 
-const register2 = async(req, res) => {
+const register = async(req, res) => {
     try {
         const { username, email, password } = req.body
 
@@ -117,16 +117,54 @@ const register2 = async(req, res) => {
 };
 
 
+// Login de usuario
+const login = async (req, res) => {
+    // Lo primero es comprobar el cuerpo de la petición
+    const { email, password } = req.body
+    try {
+        const connection = await getConnection();
+        //Comprobamos la existencia del usuario
+        const existingUser = await connection.query('SELECT * FROM users WHERE email = ?', email)
+        
+        if(!existingUser.length) return res.status(400).send({msg: "Este usuario no está registrado."});
+        
+        console.log("La matriz de usuario recibida de MYSQL es: ", existingUser);
+        // Extraemos el primer elemento de la matriz de resultados
+        const existingUserObject = existingUser[0];
+        console.log("El objeto de usuario que estamos pasando es: ", existingUserObject);
+        console.log("La contraseña introducida es: ", password);
+        const passwordHashed = existingUserObject.password;
 
-//Login de usuario
-const login = async(req, res) => {
-    
-}
+        // Comprobamos la validez de la contraseña con bcrypt.compare
+        const matchedPassword = await bcrypt.compare(password, passwordHashed)
+        if(!matchedPassword) return res.status(400).send({msg: "La contraseña no es correcta"});
+
+        const loggedUser = {
+            email: req.body.email,
+            password: passwordHashed
+        }
+
+        // Creamos el token que vamos a asignar al usuario loggeado
+        const userToken = jwt.sign( 
+            loggedUser, 
+            secret, 
+            { expiresIn: "2h"} 
+        );
+
+        res.status(201).send({
+            login: true,
+            userToken
+        })
+
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+};
 
 export const methods = {
     getAllUsers,
     findById,
     findByEmail,
-    register2,
+    register,
     login,
 }
